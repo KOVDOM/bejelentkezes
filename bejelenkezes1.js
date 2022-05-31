@@ -1,4 +1,23 @@
-var state=[];
+var state={
+  id:"",
+  lista: []
+};
+document.getElementById('kuld').onclick=function(){
+  console.log("dfsafssa");
+  var apiurl="https://reqres.in/api/unknown/"+document.getElementById("szam").value;
+  console.log(apiurl);
+  fetch(apiurl).then(function (response){
+  if(!response.ok){
+    return Promise.reject("unknown id error");
+  }
+  console.log(response);
+  return response.json();
+  }).then(function(unknownid){
+    console.log(unknownid);
+    state.id=unknownid.data;
+    renderUnknownId();
+  })
+}
 
 document.getElementById('login').onsubmit = function (event) {
   event.preventDefault();
@@ -29,14 +48,16 @@ document.getElementById('login').onsubmit = function (event) {
     })
     .then(function (response) {
       if (!response.ok) {
+        state.id="";
         return Promise.reject('Bejelentkezés sikertelen')
       }
       return response.json();
     })
     .then(function (unknownPage) {
       console.log(unknownPage);
-    state = unknownPage.data;
-    renderUsers();
+    state.list = unknownPage.data;
+    console.log(unknownPage);
+    render();
     //document.getElementById('login').style.display="none";
     })
     .catch(function (error) {
@@ -48,55 +69,42 @@ document.getElementById('login').onsubmit = function (event) {
   console.log(body);
 };
 
-function renderUsers(){
-  var unknownHTML ='';
-  for (var unknown of state){
-    unknownHTML =`<input type="number" name="idemail" class="form-control" /><br><button type="submit" id="idemail">Katt</button>`
+function render(){
+  console.log(state);
+  var tmp=`<table class='table'><tr><th scope='col'>
+  ID</th><th scope='col'>
+  Name</th><th scope='col'>Year</th><th scope='col'>
+  Color</th> <th scope="col">
+  Pantone_value</th></tr>`;
+
+  for(var u of state.list){
+    tmp+=`<tr>
+    <td>${u.id}</td>
+    <td>${u.name}</td>
+    <td>${u.year}</td>
+    <td style="background-color:${u.color}">${u.color}</td>
+    <td>${u.pantone_value}</td>    
+    </tr>`;
   }
-  document.getElementById('user-list-container').innerHTML=`<ul class="list-group">`+unknownHTML+`</ul>`;
+  document.getElementById('user-list-container2').innerHTML=tmp+`</table>`;
 }
 //<li class="list-group-item">${unknown.name}</li>
-document.getElementById('idemail').onclick=function(event){
-  event.preventDefault();
-  var name = event.target.elements.name.value;
-  var body = JSON.stringify({
-    name: name
-  })
-};
 
-fetch('https://reqres.in/api/unknown/2', {
-    method: 'POST',
-    body: body,
-    headers: {
-      'Content-type': 'application/json'
-    }
-  })
-    .then(function (response) {
-      console.log(response)
-      if (!response.ok) {
-        return Promise.reject('login error')
-      }
-      return response.json();
-    })
-    .then(function (unknownPage) {
-      console.log(unknownPage);
-    state = unknownPage.data;
-    renderUsers2();
-    //document.getElementById('login').style.display="none";
-    })
-    .catch(function (error) {
-      console.log(error);
-      alert(error);
-    })
-  console.log(email);
-  console.log(password);
-  console.log(body);
-;
-
-    function renderUsers2(){
-      var unknownHTML2 ='';
-      for (var unknown of state){
-        unknownHTML2 =`<li class="list-group-item">${unknown.name}</li>`
-      }
-      document.getElementById('user-list-container2').innerHTML2=`<ul class="list-group">`+unknownHTML2+`</ul>`;
-    };
+function renderUnknownId(){
+  console.log(state.id);
+  if(state.id!=""){
+    var tmp=`<table class='table'><tr><th scope='col'>
+  ID</th><th scope='col'>
+  Name</th><th scope='col'>Year</th><th scope='col'>
+  Color</th> <th scope="col">
+  Pantone_value</th></tr>`;  
+  tmp+=`<tr>
+    <td>${state.id.id}</td>
+    <td>${state.id.name}</td>
+    <td>${state.id.year}</td>
+    <td style="background-color:${state.id.color}">${state.id.color}</td>
+    <td>${state.id.pantone_value}</td>    
+    </tr>`;
+    document.getElementById('unknownid').innerHTML=tmp+`</table>`;
+  }
+}

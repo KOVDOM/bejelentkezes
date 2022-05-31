@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
     <title>Document</title>
 </head>
 <body>
@@ -24,21 +26,30 @@
             </label>
             <button type="submit" class="btn btn-primary">Küldés</button>
             <div id="message" class="float-right mt-2">
+              
             </div>
           </form>
         </div>
       </div>
       <div class="col-6">
         <div id="user-list-container">
-          <div id="user-list-container2"></div>
+          <div id="user-list-container2">
+             </div>
+            <input type="number" id="szam" name="szam2">
+            <button class="btn btn-primary" id="kuld" name="kuld2" onclick="kuld()">Lekérdez</button>
+          </div>
+          
           <!--ul class="list-group">
             <li class="list-group-item">George Bluth</li>
             <li class="list-group-item">Janet Weaver</li>
             <li class="list-group-item">Emma Wong</li>
           </ul-->
-        </div>
-      </div>
+       
+        
+      </div>  
+      
     </div>
+    <div id="unknownid"><p>swrgffgrsf</p> </div>
   </div>
   <script src="bejelenkezes1.js"></script>
 </body>
