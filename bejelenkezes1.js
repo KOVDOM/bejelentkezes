@@ -2,6 +2,17 @@ var state={
   id:"",
   lista: []
 };
+
+window.onload=renderLoginComponent();
+
+function renderLoginComponent(){
+  if(state.isLoggedIn){
+    document.getElementById('login').innerHTML="";
+    return;
+  }
+  
+}
+
 document.getElementById('kuld').onclick=function(){
   console.log("dfsafssa");
   var apiurl="https://reqres.in/api/unknown/"+document.getElementById("szam").value;
@@ -16,6 +27,7 @@ document.getElementById('kuld').onclick=function(){
     console.log(unknownid);
     state.id=unknownid.data;
     renderUnknownId();
+    
   })
 }
 
@@ -26,9 +38,9 @@ document.getElementById('login').onsubmit = function (event) {
   var body = JSON.stringify({
     email: email,
     password: password,
-  });
+  });loginAndFetchUsers(body);
 
-  fetch('https://reqres.in/api/login', {
+  /*fetch('https://reqres.in/api/login', {
     method: 'POST',
     body: body,
     headers: {
@@ -58,6 +70,7 @@ document.getElementById('login').onsubmit = function (event) {
     state.list = unknownPage.data;
     console.log(unknownPage);
     render();
+    
     //document.getElementById('login').style.display="none";
     })
     .catch(function (error) {
@@ -66,8 +79,41 @@ document.getElementById('login').onsubmit = function (event) {
     })
   console.log(email);
   console.log(password);
-  console.log(body);
+  console.log(body);*/
 };
+
+async function loginAndFetchUsers(body){
+  var loginResponse=await fetch('https://reqres.in/api/login', {
+    method: 'POST',
+    body: body,
+    headers: {
+      'Content-type': 'application/json'
+    }
+  })
+  if(!loginResponse.ok){
+    alert('Bejelentkezés sikertelen');
+    state.isLoginPending=false;
+    renderLoginComponent();
+    return;
+  }
+
+    var token = await loginResponse.json()
+    state.isLoggedIn=true;
+    state.isLoginPending=false;
+    renderLoginComponent(); 
+
+    var usersResponse=await fetch('https://reqres.in/api/unknown');
+    if(!usersResponse.ok){
+      alert('Users error');
+      state.isLoginPending=false;
+      renderLoginComponent();
+      return;
+    }
+    var usersPage=await usersResponse.json();
+    state.users=usersPage.data;
+    renderUsers();
+  console.log(usersPage);
+}
 
 function render(){
   console.log(state);
@@ -107,4 +153,14 @@ function renderUnknownId(){
     </tr>`;
     document.getElementById('unknownid').innerHTML=tmp+`</table>`;
   }
+}
+
+function renderUsers() {
+  var usersHTML = "";
+  for (var user of state.users) {
+    usersHTML += `<li class="list-group-item">${user.name}</li>`;
+  }
+
+  document.getElementById("user-list-container").innerHTML =
+    '<ul class="list-group">' + usersHTML + "</ul>";
 }
